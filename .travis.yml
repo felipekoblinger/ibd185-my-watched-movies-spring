@@ -12,3 +12,6 @@ addons:
 
 before_script:
   - psql -c 'create database "my-watched-movies-test";' -U postgres
+
+script:
+  - mvn -B verify sonar:sonar -Dsonar.organization=$SONAR_ORGANIZATION -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
