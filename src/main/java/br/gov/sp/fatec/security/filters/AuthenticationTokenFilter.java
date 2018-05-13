@@ -7,7 +7,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class AuthenticationTokenFilter extends OncePerRequestFilter {
-    private final Log logger = LogFactory.getLog(this.getClass());
+    private final Log log = LogFactory.getLog(this.getClass());
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -42,27 +41,26 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
             try {
                 username = tokenUtil.getUsernameFromToken(authToken);
             } catch (IllegalArgumentException e) {
-                logger.error("an error occurred during getting username from token", e);
+                log.error("an error occurred during getting username from token", e);
             } catch (ExpiredJwtException e) {
-                logger.warn("the token is expired and not valid anymore", e);
+                log.warn("the token is expired and not valid anymore", e);
             }
         } else {
-            logger.warn("couldn't find bearer string, will ignore the header");
+            log.warn("couldn't find bearer string, will ignore the header");
         }
 
-        logger.info("checking authentication for user " + username);
+        log.info("checking authentication for user " + username);
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
             // It is not compelling necessary to load the use details from the database. You could also store the information
             // in the token and read it from it. It's up to you ;)
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-            SimpleGrantedAuthority a = (SimpleGrantedAuthority) userDetails.getAuthorities().iterator().next();
             // For simple validation it is completely sufficient to just check the token integrity. You don't have to call
             // the database compellingly. Again it's up to you ;)
             if (tokenUtil.validateToken(authToken, userDetails)) {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                logger.info("authenticated user " + username + ", setting models context");
+                log.info("authenticated user " + username + ", setting models context");
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }

@@ -3,6 +3,8 @@ package br.gov.sp.fatec.services;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -13,6 +15,8 @@ import java.net.URLConnection;
 
 @Service("theMovieDatabaseService")
 public class TheMovieDatabaseServiceImpl implements TheMovieDatabaseService {
+    private final Log log = LogFactory.getLog(this.getClass());
+
     @Override
     public JsonObject getMovieById(String id) {
         try {
@@ -26,7 +30,7 @@ public class TheMovieDatabaseServiceImpl implements TheMovieDatabaseService {
                     .parse(new InputStreamReader((InputStream) request.getContent()));
             return jsonElement.getAsJsonObject();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return null;
     }
@@ -44,7 +48,7 @@ public class TheMovieDatabaseServiceImpl implements TheMovieDatabaseService {
                     .parse(new InputStreamReader((InputStream) request.getContent()));
             return jsonElement.getAsJsonObject();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return null;
     }

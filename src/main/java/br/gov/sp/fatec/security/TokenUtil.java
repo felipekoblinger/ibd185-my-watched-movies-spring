@@ -7,6 +7,8 @@ import br.gov.sp.fatec.security.models.SecurityAccount;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +17,8 @@ import org.springframework.stereotype.Component;
 @Component
 @PropertySource(value = { "classpath:application.properties" })
 public class TokenUtil {
+    private final Log log = LogFactory.getLog(this.getClass());
+
     @Value("${MWM_TOKEN_SECRET:unknown}")
     private String secret;
 
@@ -22,37 +26,42 @@ public class TokenUtil {
     @Value("${MWM_TOKEN_EXPIRATION:86400}")
     private Long expiration;
 
+    @Value("created")
+    private String created;
+
     public String getUsernameFromToken(String token) {
-        String username;
         try {
             final Claims claims = this.getClaimsFromToken(token);
-            username = claims.getSubject();
+            if (claims != null)
+                return claims.getSubject();
         } catch (Exception e) {
-            username = null;
+            log.error(e.getMessage());
         }
-        return username;
+        return null;
     }
 
     private Date getCreatedDateFromToken(String token) {
-        Date created;
         try {
             final Claims claims = this.getClaimsFromToken(token);
-            created = new Date((Long) claims.get("created"));
+            if (claims != null) {
+                return new Date((Long) claims.get(this.created));
+            }
         } catch (Exception e) {
-            created = null;
+            log.error(e.getMessage());
         }
-        return created;
+        return null;
     }
 
     private Date getExpirationDateFromToken(String token) {
-        Date expiration;
         try {
             final Claims claims = this.getClaimsFromToken(token);
-            expiration = claims.getExpiration();
+            if (claims != null) {
+                return claims.getExpiration();
+            }
         } catch (Exception e) {
-            expiration = null;
+            log.error(e.getMessage());
         }
-        return expiration;
+        return null;
     }
 
     private Claims getClaimsFromToken(String token) {
@@ -62,10 +71,11 @@ public class TokenUtil {
                     .setSigningKey(this.secret)
                     .parseClaimsJws(token)
                     .getBody();
+            return claims;
         } catch (Exception e) {
-            claims = null;
+            log.error(e.getMessage());
         }
-        return claims;
+        return null;
     }
 
     private Date generateCurrentDate() {
@@ -77,8 +87,11 @@ public class TokenUtil {
     }
 
     private Boolean isTokenExpired(String token) {
-        final Date expiration = this.getExpirationDateFromToken(token);
-        return expiration.before(this.generateCurrentDate());
+        final Date expirationDateFromToken = this.getExpirationDateFromToken(token);
+        if (expirationDateFromToken != null) {
+            return expirationDateFromToken.before(this.generateCurrentDate());
+        }
+        return true;
     }
 
     private Boolean isCreatedBeforeLastPasswordReset(Date created, Date lastPasswordReset) {
@@ -88,7 +101,7 @@ public class TokenUtil {
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("sub", userDetails.getUsername());
-        claims.put("created", this.generateCurrentDate());
+        claims.put(this.created, this.generateCurrentDate());
         return this.generateToken(claims);
     }
 
@@ -101,30 +114,30 @@ public class TokenUtil {
     }
 
     public Boolean canTokenBeRefreshed(String token, Date lastPasswordReset) {
-        final Date created = this.getCreatedDateFromToken(token);
-        return (!(this.isCreatedBeforeLastPasswordReset(created, lastPasswordReset))
+        final Date createdDateFromToken = this.getCreatedDateFromToken(token);
+        return (!(this.isCreatedBeforeLastPasswordReset(createdDateFromToken, lastPasswordReset))
                 && (!(this.isTokenExpired(token))));
     }
 
     public String refreshToken(String token) {
-        String refreshedToken;
         try {
             final Claims claims = this.getClaimsFromToken(token);
-            claims.put("created", this.generateCurrentDate());
-            refreshedToken = this.generateToken(claims);
+            if (claims != null) {
+                claims.put(this.created, this.generateCurrentDate());
+                return this.generateToken(claims);
+            }
         } catch (Exception e) {
-            refreshedToken = null;
+            log.error(e.getMessage());
         }
-        return refreshedToken;
+        return null;
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
         SecurityAccount user = (SecurityAccount) userDetails;
-        final String username = this.getUsernameFromToken(token);
-        final Date created = this.getCreatedDateFromToken(token);
-        final Date expiration = this.getExpirationDateFromToken(token);
-        return (username.equals(user.getUsername())
+        final String usernameFromToken = this.getUsernameFromToken(token);
+        final Date createdDateFromToken = this.getCreatedDateFromToken(token);
+        return (usernameFromToken.equals(user.getUsername())
                 && !(this.isTokenExpired(token))
-                && !(this.isCreatedBeforeLastPasswordReset(created, user.getLastPasswordReset())));
+                && !(this.isCreatedBeforeLastPasswordReset(createdDateFromToken, user.getLastPasswordReset())));
     }
 }

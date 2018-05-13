@@ -4,9 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.internal.engine.path.PathImpl;
@@ -45,11 +42,11 @@ public class ApiError {
     }
 
     private void addValidationError(String object, String field, Object rejectedValue, String message) {
-        addSubError(new ApiValidationError(object, field, rejectedValue, message));
+        addSubError(new ApiSubError(object, field, rejectedValue, message));
     }
 
     private void addValidationError(String object, String message) {
-        addSubError(new ApiValidationError(object, message));
+        addSubError(new ApiSubError(object, message));
     }
 
     private void addValidationError(FieldError fieldError) {
@@ -88,23 +85,5 @@ public class ApiError {
 
     void addValidationErrors(Set<ConstraintViolation<?>> constraintViolations) {
         constraintViolations.forEach(this::addValidationError);
-    }
-
-    abstract class ApiSubError {
-    }
-
-    @Data
-    @EqualsAndHashCode(callSuper = false)
-    @AllArgsConstructor
-    class ApiValidationError extends ApiSubError {
-        private String object;
-        private String field;
-        private Object rejectedValue;
-        private String message;
-
-        ApiValidationError(String object, String message) {
-            this.object = object;
-            this.message = message;
-        }
     }
 }
