@@ -6,16 +6,13 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 
-import javax.validation.ConstraintViolation;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -32,19 +29,14 @@ public class ApiError {
     @JsonIgnore
     private String debugMessage;
 
-    private List<ApiSubError> subErrors;
+    private List<ApiSubError> subErrors = new ArrayList<>();
 
     private void addSubError(ApiSubError subError) {
-        if (subErrors == null) {
-            subErrors = new ArrayList<>();
-        }
         subErrors.add(subError);
     }
-
     private void addValidationError(String object, String field, Object rejectedValue, String message) {
         addSubError(new ApiSubError(object, field, rejectedValue, message));
     }
-
     private void addValidationError(String object, String message) {
         addSubError(new ApiSubError(object, message));
     }
@@ -56,8 +48,7 @@ public class ApiError {
                 fieldError.getRejectedValue(),
                 fieldError.getDefaultMessage());
     }
-
-    void addValidationErrors(List<FieldError> fieldErrors) {
+    public void addValidationErrors(List<FieldError> fieldErrors) {
         fieldErrors.forEach(this::addValidationError);
     }
 
@@ -66,24 +57,7 @@ public class ApiError {
                 objectError.getObjectName(),
                 objectError.getDefaultMessage());
     }
-
-    void addValidationError(List<ObjectError> globalErrors) {
-        globalErrors.forEach(this::addValidationError);
-    }
-
-    /**
-     * Utility method for adding error of ConstraintViolation. Usually when a @Validated validation fails.
-     * @param cv the ConstraintViolation
-     */
-    private void addValidationError(ConstraintViolation<?> cv) {
-        this.addValidationError(
-                cv.getRootBeanClass().getSimpleName(),
-                ((PathImpl) cv.getPropertyPath()).getLeafNode().asString(),
-                cv.getInvalidValue(),
-                cv.getMessage());
-    }
-
-    void addValidationErrors(Set<ConstraintViolation<?>> constraintViolations) {
-        constraintViolations.forEach(this::addValidationError);
+    public void addValidationError(List<ObjectError> objectErrors) {
+        objectErrors.forEach(this::addValidationError);
     }
 }

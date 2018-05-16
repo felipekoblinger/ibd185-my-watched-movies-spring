@@ -17,20 +17,20 @@ public class SecurityAccount implements UserDetails {
     private String username;
     private String password;
     private String email;
-    private Date lastPasswordReset;
+    private Date lastPasswordResetDate;
     private Collection<? extends GrantedAuthority> authorities;
     private Boolean accountNonExpired = true;
     private Boolean accountNonLocked = true;
     private Boolean credentialsNonExpired = true;
     private Boolean enabled = true;
 
-    public SecurityAccount(Long id, String username, String password, String email, Date lastPasswordReset,
+    public SecurityAccount(Long id, String username, String password, String email, Date lastPasswordResetDate,
                            Collection<? extends GrantedAuthority> authorities) {
         this.setId(id);
         this.setUsername(username);
         this.setPassword(password);
         this.setEmail(email);
-        this.setLastPasswordReset(lastPasswordReset);
+        this.setLastPasswordResetDate(lastPasswordResetDate);
         this.setAuthorities(authorities);
     }
 

@@ -8,7 +8,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 
 @ControllerAdvice
@@ -29,8 +28,7 @@ public class GlobalExceptionHandler {
 
     /* When there is a duplicated model */
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ApiError> handleDataIntegrityViolation(HttpServletRequest request,
-                                         DataIntegrityViolationException exception) {
+    public ResponseEntity<Object> handleDataIntegrityViolation() {
         ApiError apiError = new ApiError();
         apiError.setTimestamp(LocalDateTime.now());
         apiError.setStatus(HttpStatus.CONFLICT);
@@ -40,8 +38,7 @@ public class GlobalExceptionHandler {
 
     /* When authorization fails */
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<ApiError> handleAuthenticationException(HttpServletRequest request,
-                                                                  AuthenticationException exception) {
+    public ResponseEntity<Object> handleAuthenticationException(AuthenticationException exception) {
         ApiError apiError = new ApiError();
         apiError.setTimestamp(LocalDateTime.now());
         apiError.setStatus(HttpStatus.UNAUTHORIZED);

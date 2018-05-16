@@ -1,15 +1,13 @@
 package br.gov.sp.fatec.exceptions;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
-class ApiSubError {
+public class ApiSubError {
     private String object;
     private String field;
     private Object rejectedValue;

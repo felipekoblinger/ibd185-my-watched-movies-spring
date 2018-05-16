@@ -1,4 +1,4 @@
-package integration;
+package integration.security;
 
 import br.gov.sp.fatec.security.EntryPointUnauthorizedHandler;
 import org.junit.Test;

@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -33,5 +36,4 @@ public class TheMovieDatabaseServiceTest {
         assertNotNull("Movies cannot be null", movies);
         assertTrue("Movies must be a JSON Object", ((JsonObject) movies).has("results"));
     }
-
 }

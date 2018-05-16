@@ -1,4 +1,4 @@
-package security.models;
+package unit.models.security;
 
 import br.gov.sp.fatec.security.models.SecurityAccount;
 import org.junit.Test;

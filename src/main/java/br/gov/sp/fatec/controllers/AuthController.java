@@ -1,4 +1,4 @@
-package br.gov.sp.fatec.controllers.auth;
+package br.gov.sp.fatec.controllers;
 
 import br.gov.sp.fatec.security.models.AuthenticationRequest;
 import br.gov.sp.fatec.security.models.AuthenticationResponse;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth/")
-public class TokenController {
+public class AuthController {
     @Value("${jwt.header}")
     private String tokenHeader;
 
@@ -28,7 +28,7 @@ public class TokenController {
     private final UserDetailsService userDetailsService;
 
     @Autowired
-    public TokenController(AuthenticationManager authenticationManager, TokenUtil tokenUtil, UserDetailsService userDetailsService) {
+    public AuthController(AuthenticationManager authenticationManager, TokenUtil tokenUtil, UserDetailsService userDetailsService) {
         this.authenticationManager = authenticationManager;
         this.tokenUtil = tokenUtil;
         this.userDetailsService = userDetailsService;

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <dataset>
+    <!-- Password: ma12345 -->
     <accounts id="1" username="marionakani" email="marionakani@test.com" name="Mario Nakani"
-              password="ma12345"
+              password="$2a$10$DxyylUA0byYKKhbkSM7RWu/jkzm9fxjLS4FkMz/yoj6xCGtA.Znje"
              birthday="1990-01-20" />
+
     <accounts id="2" username="rodrikflint" email="rodrikflint@test.com" name="Rodrik Flint"
               password="rofli30404"
              birthday="1980-10-05" />

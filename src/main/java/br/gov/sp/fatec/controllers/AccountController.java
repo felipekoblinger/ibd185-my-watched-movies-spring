@@ -1,4 +1,4 @@
-package br.gov.sp.fatec.controllers.main;
+package br.gov.sp.fatec.controllers;
 
 import br.gov.sp.fatec.models.Account;
 import br.gov.sp.fatec.services.AccountService;
@@ -29,11 +29,5 @@ public class AccountController {
     public ResponseEntity<Account> create(@Valid @RequestBody Account account) {
         return new ResponseEntity<>(accountService.create(account), HttpStatus.CREATED);
     }
-
-    @RequestMapping(value = "/me/", method = RequestMethod.GET)
-    public ResponseEntity<Account> me(@RequestBody Account account) {
-        return new ResponseEntity<>(new Account(), HttpStatus.OK);
-    }
-
 
 }

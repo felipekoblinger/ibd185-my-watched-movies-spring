@@ -2,11 +2,13 @@ package br.gov.sp.fatec.security.filters;
 
 import br.gov.sp.fatec.security.TokenUtil;
 import io.jsonwebtoken.ExpiredJwtException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class AuthenticationTokenFilter extends OncePerRequestFilter {
-    private final Log log = LogFactory.getLog(this.getClass());
+    private Logger log = LoggerFactory.getLogger("authenticationTokenFilterLogger");
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -31,8 +33,12 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
     @Value("Authorization")
     private String tokenHeader;
 
+    private Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
+                                    @NonNull HttpServletResponse response,
+                                    @NonNull FilterChain chain) throws ServletException, IOException {
         final String requestHeader = request.getHeader(this.tokenHeader);
         String username = null;
         String authToken = null;
@@ -40,8 +46,6 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
             authToken = requestHeader.substring(7);
             try {
                 username = tokenUtil.getUsernameFromToken(authToken);
-            } catch (IllegalArgumentException e) {
-                log.error("an error occurred during getting username from token", e);
             } catch (ExpiredJwtException e) {
                 log.warn("the token is expired and not valid anymore", e);
             }
@@ -49,20 +53,23 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
             log.warn("couldn't find bearer string, will ignore the header");
         }
 
-        log.info("checking authentication for user " + username);
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-
+        if (username != null && authentication == null) {
             // It is not compelling necessary to load the use details from the database. You could also store the information
             // in the token and read it from it. It's up to you ;)
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
             // For simple validation it is completely sufficient to just check the token integrity. You don't have to call
             // the database compellingly. Again it's up to you ;)
             if (tokenUtil.validateToken(authToken, userDetails)) {
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                log.info("authenticated user " + username + ", setting models context");
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                log.info("authenticated user {} setting models context", username);
+                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+            } else {
+                log.error("couldn't validate token for user {}", username);
             }
+        } else {
+            log.warn("couldn't check authentication for user null or already authenticated");
         }
 
         chain.doFilter(request, response);
