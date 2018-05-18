@@ -23,11 +23,13 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -44,6 +46,10 @@ public class Account {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(name = "uuid", nullable = false, unique = true)
+    @JsonView(View.Common.class)
+    private String uuid = System.currentTimeMillis() + "-" + UUID.randomUUID().toString();
+
     /* Database */
     @Column(name = "username", unique = true, nullable = false, length = 100)
     /* Json */
@@ -59,6 +65,7 @@ public class Account {
     @JsonView(View.Common.class)
     /* Validations */
     @NotNull
+    @Email
     @Size(min = 3, max = 255)
     private String email;
 

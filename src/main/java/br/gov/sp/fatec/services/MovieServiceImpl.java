@@ -30,6 +30,11 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    public Movie findByUuidAndAccountId(String uuid, Long accountId) {
+        return movieRepository.findByUuidAndAccountId(uuid, accountId);
+    }
+
+    @Override
     public List<Movie> findAllByAccountId(Long id) {
         return movieRepository.findAllByAccountId(id);
     }

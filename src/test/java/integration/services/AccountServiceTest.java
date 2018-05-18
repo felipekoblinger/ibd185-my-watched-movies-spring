@@ -1,13 +1,21 @@
 package integration.services;
 
 import br.gov.sp.fatec.models.Account;
+import br.gov.sp.fatec.security.services.UserDetailsServiceImpl;
 import br.gov.sp.fatec.services.AccountService;
 import com.github.springtestdbunit.TransactionDbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithSecurityContext;
+import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -30,6 +38,9 @@ public class AccountServiceTest {
     @Autowired
     private AccountService accountService;
 
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
+
     @Test
     public void testSave() {
         Account account = new Account();
@@ -49,7 +60,13 @@ public class AccountServiceTest {
     }
 
     @Test
+    @WithMockUser(authorities = { "ROLE_COMMON" }   )
     public void testFindById() {
+        UserDetails userDetails = this.userDetailsService.loadUserByUsername("marionakani");
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+
         Account account = accountService.findById(1L);
         assertNotNull("Account not found.", account);
     }

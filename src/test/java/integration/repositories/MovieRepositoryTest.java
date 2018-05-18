@@ -75,6 +75,13 @@ public class MovieRepositoryTest {
     @Test
     public void testFindAllByAccountId() {
         List<Movie> movies = movieRepository.findAllByAccountId(1L);
-        assertTrue("Movies not found.", movies.size() > 0);
+        assertTrue("Movies not found", movies.size() > 0);
+    }
+
+    @Test
+    public void testFindByUuid() {
+        Movie movie = movieRepository.findByUuidAndAccountId
+                ("a7b5fa22-4903-4059-948b-1790088f16ed", 1L);
+        assertNotNull("Movie not found", movie);
     }
 }

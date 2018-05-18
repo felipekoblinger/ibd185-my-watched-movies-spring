@@ -1,13 +1,18 @@
 package integration.services;
 
 import br.gov.sp.fatec.models.Movie;
+import br.gov.sp.fatec.security.services.UserDetailsServiceImpl;
 import br.gov.sp.fatec.services.AccountService;
 import br.gov.sp.fatec.services.MovieService;
 import com.github.springtestdbunit.TransactionDbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -39,9 +44,19 @@ public class MovieServiceTest {
     private MovieService movieService;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Before
+    public void setUp() {
+        UserDetails userDetails = this.userDetailsService.loadUserByUsername("marionakani");
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+    }
 
     @Test
     public void testCreate() {
@@ -53,27 +68,27 @@ public class MovieServiceTest {
         movie.setTitle("Rampage");
         movieService.create(movie);
 
-        assertNotNull("Movie not saved.", movie.getId());
-        assertNotNull("Movie Created At not saved.", movie.getCreatedAt());
-        assertNotNull("Movie Updated At not saved.", movie.getUpdatedAt());
+        assertNotNull("Movie not saved", movie.getId());
+        assertNotNull("Movie Created At not saved", movie.getCreatedAt());
+        assertNotNull("Movie Updated At not saved", movie.getUpdatedAt());
     }
 
     @Test
     public void testFindById() {
         Movie movie = movieService.findById(1L);
-        assertNotNull("Movie not found.", movie);
+        assertNotNull("Movie not found", movie);
     }
 
     @Test
     public void testFindAllByAccountId() {
         List<Movie> movies = movieService.findAllByAccountId(1L);
-        assertTrue("Movies not found.", movies.size() > 0);
+        assertTrue("Movies not found", movies.size() > 0);
     }
 
     @Test
     public void testUpdate() {
         Movie movie = movieService.findById(1L);
-        assertNotNull("Movie not found.", movie);
+        assertNotNull("Movie not found", movie);
         movie.setTitle("Rampage New");
         movie.setImdbId("tt2231463");
         movie.setTheMovieDatabaseId("427642");
@@ -99,9 +114,16 @@ public class MovieServiceTest {
     @Test
     public void testDelete() {
         Movie movie = movieService.findById(1L);
-        assertNotNull("Movie not found.", movie);
+        assertNotNull("Movie not found", movie);
         movieService.delete(movie);
         Movie findMovie = movieService.findById(1L);
-        assertNull("Movie not deleted.", findMovie);
+        assertNull("Movie not deleted", findMovie);
+    }
+
+    @Test
+    public void testFindByUuid() {
+        Movie movie = movieService.findByUuidAndAccountId("a7b5fa22-4903-4059-948b-1790088f16ed",
+                1L);
+        assertNotNull("Movie not found", movie);
     }
 }

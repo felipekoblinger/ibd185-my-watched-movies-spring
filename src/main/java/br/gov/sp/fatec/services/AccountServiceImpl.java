@@ -26,7 +26,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
-    public Account create(Account account) {
+    public void create(Account account) {
         /* BCrypt Password */
         account.setPassword(new BCryptPasswordEncoder().encode(account.getPassword()));
 
@@ -40,7 +40,6 @@ public class AccountServiceImpl implements AccountService {
         account.setUsername(account.getUsername().toLowerCase().trim());
         account.setName(account.getName().trim());
         accountRepository.save(account);
-        return account;
     }
 
     @Override
