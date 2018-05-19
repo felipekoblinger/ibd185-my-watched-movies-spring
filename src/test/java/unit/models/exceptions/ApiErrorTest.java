@@ -1,11 +1,17 @@
 package unit.models.exceptions;
 
 import br.gov.sp.fatec.exceptions.ApiError;
+import br.gov.sp.fatec.models.Movie;
 import org.junit.Test;
+import org.mockito.MockitoAnnotations;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import pl.pojo.tester.api.assertion.Method;
 
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +51,20 @@ public class ApiErrorTest {
         objectErrors.add(objectError);
         ApiError apiError = new ApiError();
         apiError.addValidationError(objectErrors);
+        assertTrue(apiError.getSubErrors().size() > 0);
+    }
+
+    @Test
+    public void testAddValidationErrorsWithConstraintViolation() {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+
+        Movie movie = new Movie();
+        ConstraintViolationException constraintViolationException = new ConstraintViolationException
+                (validator.validate(movie));
+
+        ApiError apiError = new ApiError();
+        apiError.addValidationErrors(constraintViolationException.getConstraintViolations());
         assertTrue(apiError.getSubErrors().size() > 0);
     }
 }

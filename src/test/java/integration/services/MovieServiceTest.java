@@ -6,6 +6,7 @@ import br.gov.sp.fatec.services.AccountService;
 import br.gov.sp.fatec.services.MovieService;
 import com.github.springtestdbunit.TransactionDbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
+import factories.MovieFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -60,17 +62,19 @@ public class MovieServiceTest {
 
     @Test
     public void testCreate() {
-        Movie movie = new Movie();
-        movie.setAccount(accountService.findById(1L));
-        movie.setDate(LocalDate.of(2018, 4, 4));
-        movie.setImdbId("tt2231461");
-        movie.setTheMovieDatabaseId("427641");
-        movie.setTitle("Rampage");
+        Movie movie = MovieFactory.validResource();
         movieService.create(movie);
 
         assertNotNull("Movie not saved", movie.getId());
         assertNotNull("Movie Created At not saved", movie.getCreatedAt());
         assertNotNull("Movie Updated At not saved", movie.getUpdatedAt());
+    }
+
+    @Test(expected = ConstraintViolationException.class)
+    public void testCreateWithViolation() {
+        Movie movie = MovieFactory.validResource();
+        movie.setRating(6);
+        movieService.create(movie);
     }
 
     @Test

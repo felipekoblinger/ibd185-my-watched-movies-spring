@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 
 @ControllerAdvice
@@ -23,6 +24,15 @@ public class GlobalExceptionHandler {
         apiError.setMessage("Field validation failed. Please check `subErrors`");
         apiError.addValidationErrors(ex.getBindingResult().getFieldErrors());
         apiError.addValidationError(ex.getBindingResult().getGlobalErrors());
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Object> methodConstraintViolationException(ConstraintViolationException ex) {
+        ApiError apiError = new ApiError();
+        apiError.setStatus(HttpStatus.BAD_REQUEST);
+        apiError.setMessage("Field validation failed. Please check `subErrors`");
+        apiError.addValidationErrors(ex.getConstraintViolations());
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 

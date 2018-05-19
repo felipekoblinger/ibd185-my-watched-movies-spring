@@ -10,6 +10,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 
 @Getter
@@ -20,6 +21,7 @@ public class MovieUpdatingDTO {
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @PastOrPresent
     private LocalDate date;
 
     private String imdbId;

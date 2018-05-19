@@ -2,8 +2,6 @@ package integration.controllers;
 
 import br.gov.sp.fatec.dtos.MovieCreationDTO;
 import br.gov.sp.fatec.dtos.MovieUpdatingDTO;
-import br.gov.sp.fatec.models.Account;
-import br.gov.sp.fatec.models.Movie;
 import br.gov.sp.fatec.security.TokenUtil;
 import br.gov.sp.fatec.security.models.SecurityAccount;
 import br.gov.sp.fatec.security.services.UserDetailsServiceImpl;
@@ -84,6 +82,7 @@ public class MovieControllerTest {
         movieCreationDTO.setTitle("Rampage");
         movieCreationDTO.setImdbId("tt2231461");
         movieCreationDTO.setTheMovieDatabaseId("427641");
+        movieCreationDTO.setRating(5);
         movieCreationDTO.setDate(LocalDate.of(2018, 4, 4));
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -224,7 +223,4 @@ public class MovieControllerTest {
                 .andExpect(status().isUnauthorized())
         ;
     }
-
-
-
 }

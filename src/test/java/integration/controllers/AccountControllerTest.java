@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.springtestdbunit.TransactionDbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
+import factories.AccountCreationDTOFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -71,12 +72,7 @@ public class AccountControllerTest {
 
     @Test
     public void testCreate() throws Exception {
-        AccountCreationDTO accountCreationDTO = new AccountCreationDTO();
-        accountCreationDTO.setUsername(" Accountprimary ");
-        accountCreationDTO.setName(" Account Primary ");
-        accountCreationDTO.setEmail("accountprimary@test.com");
-        accountCreationDTO.setPassword("12345678");
-        accountCreationDTO.setBirthday(LocalDate.of(1990, 2, 20));
+        AccountCreationDTO accountCreationDTO = AccountCreationDTOFactory.validResource();
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);

@@ -1,6 +1,7 @@
 package integration.exceptions;
 
 import br.gov.sp.fatec.exceptions.GlobalExceptionHandler;
+import br.gov.sp.fatec.models.Movie;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -15,8 +16,11 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import utils.ValidationUtil;
 
+import javax.validation.ConstraintViolationException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
@@ -26,9 +30,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class GlobalExceptionHandlerTest {
-    @Mock
-    private MessageSource messageSource;
-
     @InjectMocks
     private GlobalExceptionHandler globalExceptionHandler;
 
@@ -41,11 +42,28 @@ public class GlobalExceptionHandlerTest {
     public void testMethodArgumentNotValidException() {
         MethodArgumentNotValidException methodArgumentNotValidException = mock(MethodArgumentNotValidException.class);
         BindingResult bindingResult = mock(BindingResult.class);
-        when(bindingResult.getFieldErrors()).thenReturn(Arrays.asList(new FieldError("station", "name", "should not be empty")));
+        when(bindingResult.getFieldErrors()).thenReturn(Collections.singletonList(new FieldError("station", "name", "should not be empty")));
         when(methodArgumentNotValidException.getBindingResult()).thenReturn(bindingResult);
 
         ResponseEntity<Object> responseEntity = globalExceptionHandler.methodArgumentNotValidException
                 (methodArgumentNotValidException);
+        assertEquals("Must return bad request", HttpStatus.BAD_REQUEST,
+                responseEntity.getStatusCode());
+    }
+
+    @Test
+    public void testMethodConstraintViolationException() {
+        ConstraintViolationException constraintViolationException =
+                mock(ConstraintViolationException.class);
+
+        ValidationUtil validationUtil = new ValidationUtil();
+        Movie movie = new Movie();
+
+        when(constraintViolationException.getConstraintViolations()).thenReturn(new ConstraintViolationException
+                (validationUtil.getValidator().validate(movie)).getConstraintViolations());
+
+        ResponseEntity<Object> responseEntity = globalExceptionHandler
+                .methodConstraintViolationException(constraintViolationException);
         assertEquals("Must return bad request", HttpStatus.BAD_REQUEST,
                 responseEntity.getStatusCode());
     }

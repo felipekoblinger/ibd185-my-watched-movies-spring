@@ -89,5 +89,4 @@ public class MovieController {
         movieService.delete(movie);
         return new ResponseEntity<>("Resource deleted successfully.", HttpStatus.OK);
     }
-
 }

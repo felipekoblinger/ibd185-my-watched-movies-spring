@@ -1,5 +1,6 @@
 package br.gov.sp.fatec.models;
 
+import br.gov.sp.fatec.enums.Gender;
 import br.gov.sp.fatec.views.View;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -24,7 +25,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.Date;
@@ -44,10 +47,14 @@ public class Account {
             allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "accounts_id_seq")
     @Column(name = "id", nullable = false)
+    /* Validations */
+    @NotNull
     private Long id;
 
+    /* Database */
     @Column(name = "uuid", nullable = false, unique = true)
-    @JsonView(View.Common.class)
+    /* Validations */
+    @NotEmpty
     private String uuid = System.currentTimeMillis() + "-" + UUID.randomUUID().toString();
 
     /* Database */
@@ -64,15 +71,14 @@ public class Account {
     /* Json */
     @JsonView(View.Common.class)
     /* Validations */
-    @NotNull
+    @NotEmpty
     @Email
-    @Size(min = 3, max = 255)
     private String email;
 
     /* Database */
     @Column(name = "password", nullable = false)
     /* Validations */
-    @NotNull
+    @NotEmpty
     private String password;
 
     /* Database */
@@ -80,8 +86,17 @@ public class Account {
     /* Json */
     @JsonView(View.Common.class)
     /* Validations */
+    @NotNull
     @Size(min = 3, max = 100)
     private String name;
+
+    /* Database */
+    @Column(name = "gender", nullable = false)
+    /* Json */
+    @JsonView(View.Common.class)
+    /* Validations */
+    @NotNull
+    private Gender gender;
 
     /* Database */
     @Column(name = "birthday", nullable = false)
@@ -92,6 +107,7 @@ public class Account {
     @JsonView(View.Common.class)
     /* Validations */
     @NotNull
+    @Past
     private LocalDate birthday;
 
     /* Database */
@@ -109,5 +125,7 @@ public class Account {
             joinColumns = @JoinColumn(name = "account_id"),
             inverseJoinColumns = @JoinColumn(name = "authority_id"))
     /* Validations */
+    @NotNull
+    @Size(min = 1, max = 1)
     private List<Authority> authorities;
 }
