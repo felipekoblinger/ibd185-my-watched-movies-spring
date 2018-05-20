@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.springtestdbunit.TransactionDbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
+import factories.MovieCreationDTOFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -78,12 +79,7 @@ public class MovieControllerTest {
         assertNotNull("Account not found", securityAccount);
         String token = tokenUtil.generateToken(securityAccount);
 
-        MovieCreationDTO movieCreationDTO = new MovieCreationDTO();
-        movieCreationDTO.setTitle("Rampage");
-        movieCreationDTO.setImdbId("tt2231461");
-        movieCreationDTO.setTheMovieDatabaseId("427641");
-        movieCreationDTO.setRating(5);
-        movieCreationDTO.setDate(LocalDate.of(2018, 4, 4));
+        MovieCreationDTO movieCreationDTO = MovieCreationDTOFactory.validResource();
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -98,11 +94,8 @@ public class MovieControllerTest {
     }
     @Test
     public void testCreateWithoutPermission() throws Exception {
-        MovieCreationDTO movieCreationDTO = new MovieCreationDTO();
-        movieCreationDTO.setTitle("Rampage");
-        movieCreationDTO.setImdbId("tt2231461");
-        movieCreationDTO.setTheMovieDatabaseId("427641");
-        movieCreationDTO.setDate(LocalDate.of(2018, 4, 4));
+        MovieCreationDTO movieCreationDTO = MovieCreationDTOFactory.validResource();
+
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);

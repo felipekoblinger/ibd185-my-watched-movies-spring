@@ -8,7 +8,6 @@ import pl.pojo.tester.api.assertion.Method;
 import utils.ValidationUtil;
 
 import java.time.LocalDate;
-import java.time.temporal.TemporalAmount;
 import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
@@ -80,6 +79,28 @@ public class MovieTest {
         movie.setDate(LocalDate.now().plusDays(1L));
         assertEquals(1, validationUtil.getErrorSize(movie));
         assertEquals("must be a date in the past or in the present", validationUtil.getErrorMessage(movie));
+    }
+
+    @Test
+    public void testValidationRating() {
+        movie.setRating(null);
+        assertEquals(1, validationUtil.getErrorSize(movie));
+        assertEquals("must not be null", validationUtil.getErrorMessage(movie));
+
+        movie.setRating(6);
+        assertEquals(1, validationUtil.getErrorSize(movie));
+        assertEquals("must be less than or equal to 5", validationUtil.getErrorMessage(movie));
+
+        movie.setRating(-1);
+        assertEquals(1, validationUtil.getErrorSize(movie));
+        assertEquals("must be greater than or equal to 0", validationUtil.getErrorMessage(movie));
+    }
+
+    @Test
+    public void testValidationType() {
+        movie.setType(null);
+        assertEquals(1, validationUtil.getErrorSize(movie));
+        assertEquals("must not be null", validationUtil.getErrorMessage(movie));
     }
 
     @Test

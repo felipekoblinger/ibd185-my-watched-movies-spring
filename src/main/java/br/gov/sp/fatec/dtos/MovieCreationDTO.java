@@ -1,5 +1,6 @@
 package br.gov.sp.fatec.dtos;
 
+import br.gov.sp.fatec.enums.MovieType;
 import br.gov.sp.fatec.models.Account;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -11,6 +12,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
@@ -34,8 +36,13 @@ public class MovieCreationDTO {
 
     /* Validations */
     @NotNull
+    @Min(0)
     @Max(5)
     private Integer rating;
+
+    /* Validations */
+    @NotNull
+    private MovieType type;
 
     /* Validations */
     @NotEmpty

@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -33,8 +32,6 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
     @Value("Authorization")
     private String tokenHeader;
 
-    private Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
@@ -53,7 +50,7 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
             log.warn("couldn't find bearer string, will ignore the header");
         }
 
-        if (username != null && authentication == null) {
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             // It is not compelling necessary to load the use details from the database. You could also store the information
             // in the token and read it from it. It's up to you ;)
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);

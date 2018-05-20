@@ -22,7 +22,8 @@ import java.time.LocalDate;
 public class AccountCreationDTO {
 
     /* Validations */
-    @NotEmpty
+    @NotNull
+    @Size(min = 3, max = 100)
     private String username;
 
     /* Validations */

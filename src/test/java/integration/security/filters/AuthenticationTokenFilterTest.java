@@ -25,12 +25,12 @@ import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 import rules.LogbackVerifier;
 
@@ -40,7 +40,6 @@ import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -86,6 +85,8 @@ public class AuthenticationTokenFilterTest {
 
         MockitoAnnotations.initMocks(this);
         when(clock.now()).thenReturn(new Date());
+
+        SecurityContextHolder.getContext().setAuthentication(null);
     }
 
     @Test
@@ -158,8 +159,7 @@ public class AuthenticationTokenFilterTest {
 
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(securityAccount, null, securityAccount.getAuthorities());
-
-        ReflectionTestUtils.setField(authenticationTokenFilter, "authentication", authentication);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         mockHttpServletRequest.addHeader("Authorization", "Bearer " + token);
         mockHttpServletRequest.setRequestURI("/");

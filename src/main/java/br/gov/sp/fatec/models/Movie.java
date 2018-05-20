@@ -1,5 +1,6 @@
 package br.gov.sp.fatec.models;
 
+import br.gov.sp.fatec.enums.MovieType;
 import br.gov.sp.fatec.views.View;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -23,6 +24,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
@@ -81,8 +83,17 @@ public class Movie {
     @JsonView(View.Common.class)
     /* Validations */
     @NotNull
+    @Min(0)
     @Max(5)
     private Integer rating;
+
+    /* Database */
+    @Column(name = "type", nullable = false)
+    /* Json */
+    @JsonView(View.Common.class)
+    /* Validations */
+    @NotNull
+    private MovieType type;
 
     /* Database */
     @Column(name = "imdb_id", nullable = false)

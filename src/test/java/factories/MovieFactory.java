@@ -1,5 +1,6 @@
 package factories;
 
+import br.gov.sp.fatec.enums.MovieType;
 import br.gov.sp.fatec.models.Movie;
 
 import java.time.LocalDate;
@@ -13,6 +14,7 @@ public class MovieFactory {
         movie.setTitle("Fight Club");
         movie.setDate(LocalDate.of(2017, 5, 24));
         movie.setRating(5);
+        movie.setType(MovieType.SUBTITLED);
         movie.setImdbId("tt0137523");
         movie.setTheMovieDatabaseId("550");
         movie.setUpdatedAt(LocalDateTime.now());
