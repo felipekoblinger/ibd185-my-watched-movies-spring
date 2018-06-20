@@ -19,7 +19,7 @@ PostgreSQL 10
 #### Framework
 Spring 5.0.6
 
-### Dependecy Management
+#### Dependecy Management
 Maven
 
 #### Dependencies
@@ -103,5 +103,10 @@ The application API routes are:
 ### Continous Code Quality
 For the quality of the code, the project uses `SonarQube` in sonarcloud.io (https://sonarcloud.io/dashboard?id=br.gov.sp.fatec%3AmyWatchedMovies)
 
+![SonarQube Screenshot](/assets/images/sonarqube-screenshot.png?raw=true "SonarQube")
+
+
 ### Continous Integration
-In this project Travis C.I is in use (https://travis-ci.com/felipekoblinger/ibd185-my-watched-movies-spring.svg?branch=master)
+In this project Travis C.I is in use (https://travis-ci.com/felipekoblinger/ibd185-my-watched-movies-spring)
+
+![TravisCI Screenshot](/assets/images/travisci-screenshot.png?raw=true "TravisCI")
