@@ -7,6 +7,9 @@ This repository refers to final project of discipline `Development Laboratory in
 ## My Watched Movies (back-end)
 Is an application to collect watched movies in an easy way.
 
+### Front-end
+https://github.com/felipekoblinger/ibd185-my-watched-movies-ios
+
 ### Technologies
 The following technologies used in this project:
 
