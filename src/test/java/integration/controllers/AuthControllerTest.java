@@ -1,8 +1,9 @@
 package integration.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.springtestdbunit.TransactionDbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
-import com.google.gson.JsonObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,12 +55,15 @@ public class AuthControllerTest {
 
     @Test
     public void testCreateAuthenticationToken() throws Exception {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("username", "marionakani");
-        jsonObject.addProperty("password", "ma12345");
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode objectNode = objectMapper.createObjectNode();
+
+        objectNode.put("username", "marionakani");
+        objectNode.put("password", "ma12345");
+        String authJson = objectMapper.writeValueAsString(objectNode);
 
         mockMvc.perform(post("/auth/")
-                .contentType(MediaType.APPLICATION_JSON).content(jsonObject.toString()))
+                .contentType(MediaType.APPLICATION_JSON).content(authJson))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.token", anything()))

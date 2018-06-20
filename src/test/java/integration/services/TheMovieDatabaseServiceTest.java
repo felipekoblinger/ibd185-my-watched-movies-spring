@@ -2,16 +2,11 @@ package integration.services;
 
 import br.gov.sp.fatec.services.TheMovieDatabaseService;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.io.IOException;
-import java.io.InputStreamReader;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
