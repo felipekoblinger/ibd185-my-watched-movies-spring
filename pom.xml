@@ -49,8 +49,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <org.springframework.version>5.0.5.RELEASE</org.springframework.version>
-        <org.springframework.data.version>2.0.6.RELEASE</org.springframework.data.version>
+        <org.springframework.version>5.0.6.RELEASE</org.springframework.version>
+        <org.springframework.data.version>2.0.8.RELEASE</org.springframework.data.version>
         <org.hibernate.version>5.2.17.Final</org.hibernate.version>
         <org.postgresql.version>42.2.2</org.postgresql.version>
         <com.fasterxml.jackson>2.9.5</com.fasterxml.jackson>
