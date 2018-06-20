@@ -12,13 +12,7 @@ public class AuthenticationRequestTest {
         final Class<?> classUnderTest = AuthenticationRequest.class;
 
         assertPojoMethodsFor(classUnderTest)
-                .testing(Method.GETTER)
-                .areWellImplemented();
-        assertPojoMethodsFor(classUnderTest)
-                .testing(Method.SETTER)
-                .areWellImplemented();
-        assertPojoMethodsFor(classUnderTest)
-                .testing(Method.CONSTRUCTOR)
+                .testing(Method.GETTER, Method.SETTER, Method.CONSTRUCTOR)
                 .areWellImplemented();
     }
 }

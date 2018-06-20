@@ -8,4 +8,7 @@ import org.springframework.data.repository.query.Param;
 public interface AccountRepository extends CrudRepository<Account, Long> {
     @Query("SELECT a FROM Account a WHERE TRIM(LOWER(a.username)) = TRIM(LOWER(:username))")
     Account queryByUsername(@Param("username") String username);
+
+    @Query("SELECT a FROM Account a WHERE TRIM(LOWER(a.email)) = TRIM(LOWER(:email))")
+    Account queryByEmail(@Param("email") String email);
 }

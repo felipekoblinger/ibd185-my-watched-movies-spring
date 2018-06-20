@@ -96,12 +96,12 @@ public class Movie {
     private MovieType type;
 
     /* Database */
-    @Column(name = "imdb_id", nullable = false)
+    @Column(name = "poster_path", nullable = false)
     /* Json */
     @JsonView(View.Common.class)
     /* Validations */
     @NotEmpty
-    private String imdbId;
+    private String posterPath;
 
     /* Database */
     @Column(name = "the_movie_database_id", nullable = false)
@@ -110,6 +110,27 @@ public class Movie {
     /* Validations */
     @NotEmpty
     private String theMovieDatabaseId;
+
+    /* Database */
+    @Column(name = "genres")
+    /* Json */
+    @JsonView(View.Common.class)
+    private String genres;
+
+    /* Database */
+    @Column(name = "overview", columnDefinition = "TEXT")
+    /* Json */
+    @JsonView(View.Common.class)
+    private String overview;
+
+    /* Database */
+    @Column(name = "release_date")
+    /* Json */
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonView(View.Common.class)
+    private LocalDate releaseDate;
 
     /* Database */
     @Column(name = "created_at", nullable = false)

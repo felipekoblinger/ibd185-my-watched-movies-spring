@@ -12,7 +12,7 @@ public class MovieCreationDTOFactory {
         movieCreationDTO.setDate(LocalDate.of(2017, 5, 24));
         movieCreationDTO.setRating(5);
         movieCreationDTO.setType(MovieType.SUBTITLED);
-        movieCreationDTO.setImdbId("tt0137523");
+        movieCreationDTO.setPosterPath("/anything.jpg");
         movieCreationDTO.setTheMovieDatabaseId("550");
         movieCreationDTO.setAccount(AccountFactory.validResource());
         return movieCreationDTO;

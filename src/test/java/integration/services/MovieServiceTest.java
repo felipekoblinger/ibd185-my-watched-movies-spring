@@ -1,8 +1,8 @@
 package integration.services;
 
+import br.gov.sp.fatec.enums.MovieType;
 import br.gov.sp.fatec.models.Movie;
 import br.gov.sp.fatec.security.services.UserDetailsServiceImpl;
-import br.gov.sp.fatec.services.AccountService;
 import br.gov.sp.fatec.services.MovieService;
 import com.github.springtestdbunit.TransactionDbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
@@ -44,8 +44,6 @@ import static org.springframework.test.util.AssertionErrors.assertTrue;
 public class MovieServiceTest {
     @Autowired
     private MovieService movieService;
-    @Autowired
-    private AccountService accountService;
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
@@ -93,10 +91,11 @@ public class MovieServiceTest {
     public void testUpdate() {
         Movie movie = movieService.findById(1L);
         assertNotNull("Movie not found", movie);
-        movie.setTitle("Rampage New");
-        movie.setImdbId("tt2231463");
-        movie.setTheMovieDatabaseId("427642");
+
         movie.setDate(LocalDate.of(2018, 4, 20));
+        // TODO: test rating and type
+        movie.setRating(3);
+        movie.setType(MovieType.ORIGINAL);
 
         LocalDateTime oldUpdatedAt = movie.getUpdatedAt();
         LocalDate oldDate = movie.getDate();
@@ -108,9 +107,6 @@ public class MovieServiceTest {
 
         Movie movieUpdated = movieService.findById(1L);
 
-        assertEquals("Movie IMDB ID is not the same", "tt2231463", movieUpdated.getImdbId());
-        assertEquals("Movie TheMovieDatabase ID is not the same", "427642", movieUpdated.getTheMovieDatabaseId());
-        assertEquals("Movie Title is not the same", "Rampage New", movieUpdated.getTitle());
         assertEquals("Movie Date is not the same", oldDate, movieUpdated.getDate());
         assertNotSame("Movie Updated At cannot be the same", oldUpdatedAt, movieUpdated.getUpdatedAt());
     }

@@ -13,10 +13,7 @@ public class SecurityAccountTest {
         final Class<?> classUnderTest = SecurityAccount.class;
 
         assertPojoMethodsFor(classUnderTest)
-                .testing(Method.GETTER)
-                .areWellImplemented();
-        assertPojoMethodsFor(classUnderTest)
-                .testing(Method.SETTER)
+                .testing(Method.GETTER, Method.SETTER)
                 .areWellImplemented();
     }
 

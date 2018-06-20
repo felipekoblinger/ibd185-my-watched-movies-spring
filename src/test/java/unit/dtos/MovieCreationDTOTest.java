@@ -27,10 +27,7 @@ public class MovieCreationDTOTest {
     public void testPojo() {
         final Class<?> classUnderTest = MovieCreationDTO.class;
         assertPojoMethodsFor(classUnderTest)
-                .testing(Method.GETTER)
-                .areWellImplemented();
-        assertPojoMethodsFor(classUnderTest)
-                .testing(Method.SETTER)
+                .testing(Method.GETTER, Method.SETTER)
                 .areWellImplemented();
     }
 
@@ -85,14 +82,9 @@ public class MovieCreationDTOTest {
     }
 
     @Test
-    public void testValidationImdbId() {
-        movieCreationDTO.setImdbId(null);
-        assertEquals(1, validationUtil.getErrorSize(movieCreationDTO));
-        assertEquals("must not be empty", validationUtil.getErrorMessage(movieCreationDTO));
-
-        movieCreationDTO.setImdbId("");
-        assertEquals(1, validationUtil.getErrorSize(movieCreationDTO));
-        assertEquals("must not be empty", validationUtil.getErrorMessage(movieCreationDTO));
+    public void testValidationPosterPath() {
+        movieCreationDTO.setPosterPath(null);
+        assertEquals(0, validationUtil.getErrorSize(movieCreationDTO));
     }
 
     @Test

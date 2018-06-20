@@ -1,5 +1,6 @@
 package integration.controllers;
 
+import br.gov.sp.fatec.dtos.AccountChangePasswordDTO;
 import br.gov.sp.fatec.dtos.AccountCreationDTO;
 import br.gov.sp.fatec.models.Account;
 import br.gov.sp.fatec.security.TokenUtil;
@@ -35,6 +36,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -101,5 +103,98 @@ public class AccountControllerTest {
                 .andExpect(jsonPath("$.name", equalTo("Mario Nakani")))
                 .andExpect(jsonPath("$.birthday", equalTo("20-01-1990")))
         ;
+    }
+
+    @Test
+    public void testExistsUsernameEmail() throws Exception {
+        mockMvc.perform(get("/accounts/exists-username-or-email/?username=marionakani&email" +
+                "=marionakani@test.com"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username", equalTo(true)))
+                .andExpect(jsonPath("$.email", equalTo(true)))
+        ;
+    }
+
+    @Test
+    public void testExistsUsernameEmailNonExistentUsername() throws Exception {
+        mockMvc.perform(get("/accounts/exists-username-or-email/?username=usernamex&email" +
+                "=marionakani@test.com"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username", equalTo(false)))
+                .andExpect(jsonPath("$.email", equalTo(true)))
+        ;
+    }
+
+    @Test
+    public void testExistsUsernameEmailNonExistentEmail() throws Exception {
+        mockMvc.perform(get("/accounts/exists-username-or-email/?username=marionakani&email" +
+                "=emailx@test.com"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username", equalTo(true)))
+                .andExpect(jsonPath("$.email", equalTo(false)))
+        ;
+    }
+
+    @Test
+    public void testChangePassword() throws Exception {
+        SecurityAccount securityAccount =
+                (SecurityAccount) userDetailsService.loadUserByUsername("marionakani");
+        assertNotNull("Account not found", securityAccount);
+
+        AccountChangePasswordDTO accountChangePasswordDTO = new AccountChangePasswordDTO();
+        accountChangePasswordDTO.setCurrentPassword("ma12345");
+        accountChangePasswordDTO.setNewPassword("ma123456");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String accountJson = objectMapper.writeValueAsString(accountChangePasswordDTO);
+
+        String token = tokenUtil.generateToken(securityAccount);
+        mockMvc.perform(put("/accounts/change-password/")
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON).content(accountJson))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void testChangePasswordWithWrongCurrentPassword() throws Exception {
+        SecurityAccount securityAccount =
+                (SecurityAccount) userDetailsService.loadUserByUsername("marionakani");
+        assertNotNull("Account not found", securityAccount);
+
+        AccountChangePasswordDTO accountChangePasswordDTO = new AccountChangePasswordDTO();
+        accountChangePasswordDTO.setCurrentPassword("marionakani123456");
+        accountChangePasswordDTO.setNewPassword("ma123456");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String accountJson = objectMapper.writeValueAsString(accountChangePasswordDTO);
+
+        String token = tokenUtil.generateToken(securityAccount);
+        mockMvc.perform(put("/accounts/change-password/")
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON).content(accountJson))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+
+    }
+
+    @Test
+    public void testChangePasswordWithoutToken() throws Exception {
+        AccountChangePasswordDTO accountChangePasswordDTO = new AccountChangePasswordDTO();
+        accountChangePasswordDTO.setCurrentPassword("marionakani123456");
+        accountChangePasswordDTO.setNewPassword("ma123456");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String accountJson = objectMapper.writeValueAsString(accountChangePasswordDTO);
+
+        mockMvc.perform(put("/accounts/change-password/")
+                .contentType(MediaType.APPLICATION_JSON).content(accountJson))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+
     }
 }

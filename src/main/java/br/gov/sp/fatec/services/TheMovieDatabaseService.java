@@ -1,8 +1,8 @@
 package br.gov.sp.fatec.services;
 
-import com.google.gson.JsonObject;
+import com.fasterxml.jackson.databind.JsonNode;
 
 public interface TheMovieDatabaseService {
-    JsonObject getMovieById(String id);
-    JsonObject searchMoviesByTerm(String term);
+    JsonNode getMovieById(String id);
+    JsonNode searchMoviesByTerm(String term);
 }

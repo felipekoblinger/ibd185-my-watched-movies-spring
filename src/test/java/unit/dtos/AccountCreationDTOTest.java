@@ -28,10 +28,7 @@ public class AccountCreationDTOTest {
     public void testPojo() {
         final Class<?> classUnderTest = AccountCreationDTO.class;
         assertPojoMethodsFor(classUnderTest)
-                .testing(Method.GETTER)
-                .areWellImplemented();
-        assertPojoMethodsFor(classUnderTest)
-                .testing(Method.SETTER)
+                .testing(Method.GETTER, Method.SETTER)
                 .areWellImplemented();
     }
 

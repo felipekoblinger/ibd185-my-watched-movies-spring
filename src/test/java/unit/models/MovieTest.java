@@ -28,10 +28,7 @@ public class MovieTest {
         final Class<?> classUnderTest = Movie.class;
 
         assertPojoMethodsFor(classUnderTest)
-                .testing(Method.GETTER)
-                .areWellImplemented();
-        assertPojoMethodsFor(classUnderTest)
-                .testing(Method.SETTER)
+                .testing(Method.GETTER, Method.SETTER)
                 .areWellImplemented();
     }
 
@@ -101,17 +98,6 @@ public class MovieTest {
         movie.setType(null);
         assertEquals(1, validationUtil.getErrorSize(movie));
         assertEquals("must not be null", validationUtil.getErrorMessage(movie));
-    }
-
-    @Test
-    public void testValidationImdbId() {
-        movie.setImdbId("");
-        assertEquals(1, validationUtil.getErrorSize(movie));
-        assertEquals("must not be empty", validationUtil.getErrorMessage(movie));
-
-        movie.setImdbId(null);
-        assertEquals(1, validationUtil.getErrorSize(movie));
-        assertEquals("must not be empty", validationUtil.getErrorMessage(movie));
     }
 
     @Test

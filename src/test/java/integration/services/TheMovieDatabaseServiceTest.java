@@ -1,6 +1,7 @@
 package integration.services;
 
 import br.gov.sp.fatec.services.TheMovieDatabaseService;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.junit.Test;
@@ -24,16 +25,16 @@ public class TheMovieDatabaseServiceTest {
     @Test
     public void testGetMovieById() {
         String id = "427641";
-        JsonElement movie = theMovieDatabaseService.getMovieById(id);
+        JsonNode movie = theMovieDatabaseService.getMovieById(id);
         assertNotNull("Movie cannot be null", movie);
-        assertTrue("Movie must be a JSON Object", movie.isJsonObject());
+        assertTrue("Movie must be a JSON Object", movie.isObject());
     }
 
     @Test
     public void testSearchMoviesByTerm() {
         String term = "avengers";
-        JsonElement movies = theMovieDatabaseService.searchMoviesByTerm(term);
+        JsonNode movies = theMovieDatabaseService.searchMoviesByTerm(term);
         assertNotNull("Movies cannot be null", movies);
-        assertTrue("Movies must be a JSON Object", ((JsonObject) movies).has("results"));
+        assertTrue("Movies must be a JSON Object", movies.has("results"));
     }
 }

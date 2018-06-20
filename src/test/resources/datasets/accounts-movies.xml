@@ -5,8 +5,9 @@
               password="$2a$10$DxyylUA0byYKKhbkSM7RWu/jkzm9fxjLS4FkMz/yoj6xCGtA.Znje"
              birthday="1990-01-20" uuid="6b9be252-8b20-4890-b2d4-c08e7ca1ecaa" gender="0" />
 
+    <!-- Password: ma12345 -->
     <accounts id="2" username="rodrikflint" email="rodrikflint@test.com" name="Rodrik Flint"
-              password="rofli30404"
+              password="$2a$10$DxyylUA0byYKKhbkSM7RWu/jkzm9fxjLS4FkMz/yoj6xCGtA.Znje"
              birthday="1980-10-05" uuid="f93626a9-7175-4ccb-ae9c-5e3822dc608d" gender="1" />
 
     <accounts id="3" username="jeynewaters" email="jeynewaters@test.com" name="Jeyne Waters"
@@ -21,7 +22,17 @@
     <account_authorities account_id="2" authority_id="2" />
     <account_authorities account_id="3" authority_id="2" />
 
-    <movies id="1" date="2018-04-04" imdb_id="tt2231461" the_movie_database_id="427641"
+    <movies id="1" date="2018-04-04" the_movie_database_id="427641"
             title="Rampage" created_at="2018-05-05 10:01:23" updated_at="2018-05-05 10:01:23"
-            account_id="1" uuid="a7b5fa22-4903-4059-948b-1790088f16ed" rating="3" type="0" />
+            account_id="1" uuid="a7b5fa22-4903-4059-948b-1790088f16ed" rating="3" type="0"
+            poster_path="/anything.jpg" />
+
+    <movies id="2" date="2018-04-04" the_movie_database_id="427641"
+            title="Rampage" created_at="2018-05-05 10:01:23" updated_at="2018-05-05 10:01:23"
+            account_id="2" uuid="b7b5fa22-4903-4059-948b-1790088f16ed" rating="3" type="0"
+            poster_path="/anything.jpg" />
+    <movies id="3" date="2018-03-04" the_movie_database_id="427641"
+            title="Rampage" created_at="2018-05-05 10:01:23" updated_at="2018-05-05 10:01:23"
+            account_id="2" uuid="c7b5fa22-4903-4059-948b-1790088f16ed" rating="3" type="1"
+            poster_path="/anything.jpg" />
 </dataset>

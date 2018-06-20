@@ -14,8 +14,8 @@ public class MovieFactory {
         movie.setTitle("Fight Club");
         movie.setDate(LocalDate.of(2017, 5, 24));
         movie.setRating(5);
+        movie.setPosterPath("/anything.jpg");
         movie.setType(MovieType.SUBTITLED);
-        movie.setImdbId("tt0137523");
         movie.setTheMovieDatabaseId("550");
         movie.setUpdatedAt(LocalDateTime.now());
         movie.setCreatedAt(LocalDateTime.now());

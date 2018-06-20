@@ -2,6 +2,7 @@ package integration.controllers;
 
 import br.gov.sp.fatec.dtos.MovieCreationDTO;
 import br.gov.sp.fatec.dtos.MovieUpdatingDTO;
+import br.gov.sp.fatec.enums.MovieType;
 import br.gov.sp.fatec.security.TokenUtil;
 import br.gov.sp.fatec.security.models.SecurityAccount;
 import br.gov.sp.fatec.security.services.UserDetailsServiceImpl;
@@ -115,9 +116,9 @@ public class MovieControllerTest {
         String token = tokenUtil.generateToken(securityAccount);
 
         MovieUpdatingDTO movieUpdatingDTO = new MovieUpdatingDTO();
-        movieUpdatingDTO.setTitle("Rampage 2");
-        movieUpdatingDTO.setTheMovieDatabaseId("427643");
         movieUpdatingDTO.setDate(LocalDate.of(2018, 5, 5));
+        movieUpdatingDTO.setRating(4);
+        movieUpdatingDTO.setType(MovieType.ORIGINAL);
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -133,10 +134,9 @@ public class MovieControllerTest {
     @Test
     public void testUpdateWithoutPermission() throws Exception {
         MovieUpdatingDTO movieUpdatingDTO = new MovieUpdatingDTO();
-        movieUpdatingDTO.setTitle("Rampage 2");
-        movieUpdatingDTO.setImdbId("tt2231462");
-        movieUpdatingDTO.setTheMovieDatabaseId("427643");
         movieUpdatingDTO.setDate(LocalDate.of(2018, 5, 5));
+        movieUpdatingDTO.setRating(4);
+        movieUpdatingDTO.setType(MovieType.ORIGINAL);
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);

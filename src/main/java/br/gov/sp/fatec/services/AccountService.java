@@ -8,4 +8,9 @@ public interface AccountService {
 
     @PreAuthorize("hasAnyRole('ROLE_COMMON', 'ROLE_PAID')")
     Account findById(Long id);
+
+    Account findByUsername(String username);
+    Account findByEmail(String email);
+
+    boolean changePassword(Account account, String currentPassword, String newPassword);
 }

@@ -50,7 +50,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public List<Movie> findAllByAccountId(Long id) {
-        return movieRepository.findAllByAccountId(id);
+        return movieRepository.findAllByAccountIdOrderByDateDescCreatedAtDesc(id);
     }
 
     @Override

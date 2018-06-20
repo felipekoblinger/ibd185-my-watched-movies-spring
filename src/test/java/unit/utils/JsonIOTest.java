@@ -1,6 +1,7 @@
 package unit.utils;
 
 import br.gov.sp.fatec.utils.JsonIO;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.gson.JsonObject;
 import org.junit.Rule;
 import org.junit.Test;
@@ -29,11 +30,13 @@ public class JsonIOTest {
         new MockServerClient("localhost", 9000)
             .when(request().withMethod("GET").withPath("/login"))
             .respond(
-                response().withStatusCode(200).withBody("{'username': 'a', 'password': 'b'}")
+                response().withStatusCode(200)
+                          .withBody("{\"username\": \"a\", \"password\": \"b\"}")
             );
-        JsonObject jsonObject = new JsonIO().load("http://localhost:9000/login");
-        assertEquals("a", jsonObject.get("username").getAsString());
-        assertEquals("b", jsonObject.get("password").getAsString());
+        JsonNode jsonObject = new JsonIO().load("http://localhost:9000/login");
+        System.out.println(jsonObject);
+        assertEquals("a", jsonObject.get("username").asText());
+        assertEquals("b", jsonObject.get("password").asText());
     }
 
     @Test
@@ -43,7 +46,7 @@ public class JsonIOTest {
                 .respond(
                         response().withStatusCode(500)
                 );
-        JsonObject jsonObject = new JsonIO().load("http://localhost:9000/test-error/");
+        JsonNode jsonObject = new JsonIO().load("http://localhost:9000/test-error/");
         assertNull("IO Exception gives null object", jsonObject);
     }
 }

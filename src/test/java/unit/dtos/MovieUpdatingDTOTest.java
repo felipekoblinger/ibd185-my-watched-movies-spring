@@ -27,10 +27,7 @@ public class MovieUpdatingDTOTest {
     public void testPojo() {
         final Class<?> classUnderTest = MovieUpdatingDTO.class;
         assertPojoMethodsFor(classUnderTest)
-                .testing(Method.GETTER)
-                .areWellImplemented();
-        assertPojoMethodsFor(classUnderTest)
-                .testing(Method.SETTER)
+                .testing(Method.GETTER, Method.SETTER)
                 .areWellImplemented();
     }
 

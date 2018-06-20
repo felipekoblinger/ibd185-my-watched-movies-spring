@@ -42,7 +42,7 @@ public class AccountServiceTest {
     private UserDetailsServiceImpl userDetailsService;
 
     @Test
-    public void testSave() {
+    public void testCreate() {
         Account account = new Account();
         account.setUsername(" Accountprimary ");
         account.setName(" Account Primary ");
@@ -60,7 +60,6 @@ public class AccountServiceTest {
     }
 
     @Test
-    @WithMockUser(authorities = { "ROLE_COMMON" }   )
     public void testFindById() {
         UserDetails userDetails = this.userDetailsService.loadUserByUsername("marionakani");
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
@@ -69,5 +68,31 @@ public class AccountServiceTest {
 
         Account account = accountService.findById(1L);
         assertNotNull("Account not found.", account);
+    }
+
+    /*
+        TODO:
+        Account findByUsername(String username);
+        Account findByEmail(String email);
+     */
+
+    @Test
+    public void testChangePassword() {
+        UserDetails userDetails = this.userDetailsService.loadUserByUsername("marionakani");
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+
+        Account account = accountService.findById(1L);
+        assertNotNull("Account not found.", account);
+
+        // ma12345
+        String currentPassword = "ma12345";
+        String newPassword = "ka12345";
+
+        boolean isChanged = accountService.changePassword(account, currentPassword, newPassword);
+        assertTrue("Password not changed.", isChanged);
+        /* Extra confirmation */
+        assertTrue("New password do not match", BCrypt.checkpw(newPassword, account.getPassword()));
     }
 }

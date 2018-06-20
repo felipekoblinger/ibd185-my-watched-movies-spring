@@ -1,10 +1,7 @@
 package integration.repositories;
 
-import br.gov.sp.fatec.models.Authority;
-import br.gov.sp.fatec.models.AuthorityName;
 import br.gov.sp.fatec.models.Movie;
 import br.gov.sp.fatec.repositories.AccountRepository;
-import br.gov.sp.fatec.repositories.AuthorityRepository;
 import br.gov.sp.fatec.repositories.MovieRepository;
 import com.github.springtestdbunit.TransactionDbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
@@ -45,7 +42,6 @@ public class MovieRepositoryTest {
         Movie movie = new Movie();
         movie.setAccount(accountRepository.findById(1L).orElse(null));
         movie.setDate(LocalDate.of(2018, 4, 4));
-        movie.setImdbId("tt2231461");
         movie.setTheMovieDatabaseId("427641");
         movie.setTitle("Rampage");
         movie.setCreatedAt(LocalDateTime.now());

@@ -2,8 +2,10 @@ package br.gov.sp.fatec.dtos;
 
 import br.gov.sp.fatec.enums.MovieType;
 import br.gov.sp.fatec.models.Account;
+import br.gov.sp.fatec.views.View;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -45,12 +47,26 @@ public class MovieCreationDTO {
     private MovieType type;
 
     /* Validations */
-    @NotEmpty
-    private String imdbId;
+    private String posterPath;
 
     /* Validations */
     @NotEmpty
     private String theMovieDatabaseId;
+
+    /* Json */
+    @JsonView(View.Common.class)
+    private String genres;
+
+    /* Json */
+    @JsonView(View.Common.class)
+    private String overview;
+
+    /* Json */
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonView(View.Common.class)
+    private LocalDate releaseDate;
 
     /* Json */
     @JsonIgnore

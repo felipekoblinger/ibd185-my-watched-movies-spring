@@ -40,6 +40,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Object> handleDataIntegrityViolation() {
         ApiError apiError = new ApiError();
+
         apiError.setTimestamp(LocalDateTime.now());
         apiError.setStatus(HttpStatus.CONFLICT);
         apiError.setMessage("The register already exists in database, please verify the parameters.");
