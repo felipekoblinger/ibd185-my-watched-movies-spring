@@ -22,12 +22,17 @@
     <mvc:annotation-driven validator="validator" />
     <jpa:repositories base-package="br.gov.sp.fatec.repositories" />
 
+    <bean class="java.net.URI" id="dbUrl">
+        <constructor-arg value="${DATABASE_URL}"/>
+    </bean>
+
     <!-- Datasource -->
     <bean id="dataSource"
           class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="org.postgresql.Driver" />
-        <property name="url" value="jdbc:postgresql:my-watched-movies" />
-        <property name="username" value="postgres" />
+        <property name="url" value="#{ 'jdbc:postgresql://' + @dbUrl.getHost() + @dbUrl.getPath() }"/>
+        <property name="username" value="#{ @dbUrl.getUserInfo().split(':')[0] }"/>
+        <property name="password" value="#{ @dbUrl.getUserInfo().split(':')[1] }"/>
     </bean>
 
     <bean id="entityManagerFactory"
