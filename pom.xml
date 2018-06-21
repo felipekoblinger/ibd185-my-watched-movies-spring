@@ -7,6 +7,17 @@
     <groupId>br.gov.sp.fatec</groupId>
     <artifactId>myWatchedMovies</artifactId>
     <version>1.0</version>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <org.springframework.version>5.0.6.RELEASE</org.springframework.version>
+        <org.springframework.data.version>2.0.8.RELEASE</org.springframework.data.version>
+        <org.hibernate.version>5.3.1.Final</org.hibernate.version>
+        <org.postgresql.version>42.2.2</org.postgresql.version>
+        <com.fasterxml.jackson.version>2.9.5</com.fasterxml.jackson.version>
+        <project.environment>main</project.environment>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
@@ -15,6 +26,16 @@
                 <configuration>
                     <source>8</source>
                     <target>8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <version>3.6.1</version>
+                <configuration>
+                    <propertyFileWillOverride>true</propertyFileWillOverride>
+                    <propertyFile>src/main/resources/liquibase/liquibase-${project.environment}.properties</propertyFile>
+                    <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
                 </configuration>
             </plugin>
             <plugin>
@@ -46,15 +67,6 @@
         </plugins>
     </build>
     <packaging>war</packaging>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <org.springframework.version>5.0.6.RELEASE</org.springframework.version>
-        <org.springframework.data.version>2.0.8.RELEASE</org.springframework.data.version>
-        <org.hibernate.version>5.3.1.Final</org.hibernate.version>
-        <org.postgresql.version>42.2.2</org.postgresql.version>
-        <com.fasterxml.jackson.version>2.9.5</com.fasterxml.jackson.version>
-    </properties>
 
     <dependencies>
         <!-- Lombok -->
@@ -129,6 +141,13 @@
             <groupId>org.springframework.mobile</groupId>
             <artifactId>spring-mobile-device</artifactId>
             <version>1.1.5.RELEASE</version>
+        </dependency>
+
+        <!-- Liquibase -->
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>3.6.1</version>
         </dependency>
 
         <!-- Model Mapping -->

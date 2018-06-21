@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="3" author="felipe.koblinger">
+        <createTable tableName="account_authorities">
+            <column name="account_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="authority_id" type="int">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <!-- Indices -->
+        <addForeignKeyConstraint baseColumnNames="account_id"
+                                 baseTableName="account_authorities"
+                                 constraintName="fk_account_authorities_account"
+                                 referencedColumnNames="id"
+                                 referencedTableName="accounts"/>
+
+        <addForeignKeyConstraint baseColumnNames="authority_id"
+                                 baseTableName="account_authorities"
+                                 constraintName="fk_account_authorities_authority"
+                                 referencedColumnNames="id"
+                                 referencedTableName="authorities"/>
+
+        <createIndex tableName="account_authorities" indexName="idx_account_authorities_account_id_authority_id">
+            <column name="account_id"/>
+            <column name="authority_id"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>

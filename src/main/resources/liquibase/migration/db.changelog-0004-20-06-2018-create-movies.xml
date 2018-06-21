@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="4" author="felipe.koblinger">
+        <createTable tableName="movies">
+            <column name="id" type="serial" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="uuid" type="varchar(255)">
+                <constraints nullable="false" unique="true" />
+            </column>
+
+            <column name="account_id" type="int">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="title" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="date" type="date">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="rating" type="int">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="type" type="int">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="poster_path" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            
+            <column name="the_movie_database_id" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="genres" type="varchar(255)" />
+
+            <column name="overview" type="text" />
+
+            <column name="release_date" type="date" />
+
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false" />
+            </column>
+            <column name="updated_at" type="timestamp">
+                <constraints nullable="false" />
+            </column>
+
+        </createTable>
+
+        <!-- Indices -->
+        <createIndex tableName="movies" indexName="idx_movies_account_id">
+            <column name="account_id" />
+        </createIndex>
+
+        <createIndex tableName="movies" indexName="idx_movies_uuid_account_id">
+            <column name="account_id"/>
+            <column name="uuid"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="account_id"
+                                 baseTableName="movies"
+                                 constraintName="fk_movies_account"
+                                 referencedColumnNames="id"
+                                 referencedTableName="accounts"/>
+    </changeSet>
+</databaseChangeLog>
