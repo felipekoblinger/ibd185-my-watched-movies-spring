@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/auth/")
 public class AuthController {
@@ -51,5 +53,13 @@ public class AuthController {
 
         // Return the token
         return ResponseEntity.ok(new AuthenticationResponse(token));
+    }
+
+    @RequestMapping(value = "/refresh", method = RequestMethod.GET)
+    public ResponseEntity<AuthenticationResponse> refreshToken(HttpServletRequest request) {
+        String currentToken = request.getHeader("Authorization")
+                .replaceAll("Bearer ", "");
+        String refreshToken = tokenUtil.refreshToken(currentToken);
+        return ResponseEntity.ok(new AuthenticationResponse(refreshToken));
     }
 }

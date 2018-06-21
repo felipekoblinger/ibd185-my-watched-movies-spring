@@ -1,5 +1,8 @@
 package integration.controllers;
 
+import br.gov.sp.fatec.security.TokenUtil;
+import br.gov.sp.fatec.security.models.SecurityAccount;
+import br.gov.sp.fatec.security.services.UserDetailsServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.springtestdbunit.TransactionDbUnitTestExecutionListener;
@@ -22,6 +25,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.Filter;
 
+import static org.junit.Assert.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -41,6 +46,12 @@ public class AuthControllerTest {
     private Filter springSecurityFilterChain;
 
     private MockMvc mockMvc;
+
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
+
+    @Autowired
+    private TokenUtil tokenUtil;
 
     @Autowired
     protected WebApplicationContext webApplicationContext;
@@ -68,5 +79,19 @@ public class AuthControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.token", anything()))
         ;
+    }
+
+    @Test
+    public void testRefreshToken() throws Exception {
+        SecurityAccount securityAccount =
+                (SecurityAccount) userDetailsService.loadUserByUsername("marionakani");
+        assertNotNull("Account not found", securityAccount);
+
+        String token = tokenUtil.generateToken(securityAccount);
+        mockMvc.perform(get("/auth/refresh/")
+                .header("Authorization", "Bearer " + token))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.token", anything()));
     }
 }
