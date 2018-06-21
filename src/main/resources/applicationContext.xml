@@ -26,17 +26,6 @@
         <constructor-arg value="#{systemEnvironment['DATABASE_URL']}"/>
     </bean>
 
-    <!-- Liquibase -->
-    <bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
-        <property name="dataSource" ref="dataSource" />
-        <property name="changeLog" value="classpath:liquibase/master.xml" />
-
-        <!--
-        contexts specifies the runtime contexts to use.
-        -->
-        <property name="contexts" value="production" />
-    </bean>
-
     <!-- Datasource -->
     <bean id="dataSource"
           class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -44,6 +33,12 @@
         <property name="url" value="#{ 'jdbc:postgresql://' + @dbUrl.getHost() + @dbUrl.getPath() }"/>
         <property name="username" value="#{ @dbUrl.getUserInfo().split(':')[0] }"/>
         <property name="password" value="#{ @dbUrl.getUserInfo().split(':')[1] }"/>
+    </bean>
+
+    <!-- Liquibase -->
+    <bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
+        <property name="dataSource" ref="dataSource" />
+        <property name="changeLog" value="classpath:liquibase/master.xml" />
     </bean>
 
     <bean id="entityManagerFactory"
