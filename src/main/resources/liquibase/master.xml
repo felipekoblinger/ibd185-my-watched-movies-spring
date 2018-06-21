@@ -8,10 +8,11 @@
         <dbms type="postgresql" />
     </preConditions>
 
-    <include file="src/main/resources/liquibase/migration/db.changelog-0001-20-06-2018-create-accounts.xml" />
     <include
-            file="src/main/resources/liquibase/migration/db.changelog-0002-20-06-2018-create-authorities.xml" />
+            file="classpath:liquibase/migration/db.changelog-0001-20-06-2018-create-accounts.xml" />
     <include
-            file="src/main/resources/liquibase/migration/db.changelog-0003-20-06-2018-create-account-authorities.xml" />
-    <include file="src/main/resources/liquibase/migration/db.changelog-0004-20-06-2018-create-movies.xml" />
+            file="classpath:liquibase/migration/db.changelog-0002-20-06-2018-create-authorities.xml" />
+    <include
+            file="classpath:liquibase/migration/db.changelog-0003-20-06-2018-create-account-authorities.xml" />
+    <include file="classpath:liquibase/migration/db.changelog-0004-20-06-2018-create-movies.xml" />
 </databaseChangeLog>

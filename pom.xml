@@ -15,7 +15,7 @@
         <org.hibernate.version>5.3.1.Final</org.hibernate.version>
         <org.postgresql.version>42.2.2</org.postgresql.version>
         <com.fasterxml.jackson.version>2.9.5</com.fasterxml.jackson.version>
-        <project.environment>main</project.environment>
+        <project.environment>development</project.environment>
     </properties>
 
     <build>
